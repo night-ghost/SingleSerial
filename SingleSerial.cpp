@@ -71,6 +71,7 @@ void SingleSerial::begin(long baud)
 
 	// If the user has supplied a new baud rate, compute the new UBRR value.
 	if (baud > 0) {
+/*
 #if F_CPU == 16000000UL
 		// hardcoded exception for compatibility with the bootloader shipped
 		// with the Duemilanove and previous boards and the firmware on the 8U2
@@ -78,7 +79,7 @@ void SingleSerial::begin(long baud)
 		if (baud == 57600)
 			use_u2x = false;
 #endif
-
+*/
 		if (use_u2x) {
 			UCSR0A = 1 << U2X0;
 			ubrr = (F_CPU / 4 / baud - 1) / 2;

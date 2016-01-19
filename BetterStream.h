@@ -14,11 +14,11 @@
 #define HardwareSerial_h
 
 
-//#define SKIP_FLOAT // printf without float
+#define SKIP_FLOAT // printf without float
 
 #include "MyStream.h"
 #include <avr/pgmspace.h>
-//#include "../AP_Common/AP_Common.h" no other libs! *{
+//#include "../AP_Common/AP_Common.h" no other libs!  
 
 // prog_char_t is used as a wrapper type for prog_char, which is
 // a character stored in flash. By using this wrapper type we can
@@ -27,11 +27,7 @@
 typedef struct {
     char c;
 } prog_char_t;
-
-
 typedef char prog_char;
-//}*
-
 
 class BetterStream : public MyStream {
 public:

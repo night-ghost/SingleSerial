@@ -1,9 +1,7 @@
 # SingleSerial
 Simple and fast serial library for chips with single hardware serial
 
-based on FastSerial of Michael Smith and Arduino's HardwareSerial
-
-
+speed as FastSerial with tiny size
 
 sizes of sketch DigitalReadSerial from Arduino samples
 

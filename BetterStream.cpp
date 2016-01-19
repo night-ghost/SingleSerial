@@ -17,6 +17,12 @@
 #include <limits.h>
 #include "BetterStream.h"
 
+
+// prog_char_t is used as a wrapper type for prog_char, which is
+// a character stored in flash. By using this wrapper type we can
+// auto-detect at compile time if a call to a string function is using
+// a flash-stored string or not
+
 // Stream extensions////////////////////////////////////////////////////////////
 
 void
@@ -25,7 +31,7 @@ BetterStream::print_P(const prog_char_t *s)
         char    c;
 
         while ('\0' != (c = pgm_read_byte((const prog_char *)s++)))
-                write(c);
+                _write(c);
 }
 
 void
@@ -34,7 +40,7 @@ BetterStream::print_P(const prog_char *s)
         char    c;
 
         while ('\0' != (c = pgm_read_byte((const prog_char *)s++)))
-                write(c);
+                _write(c);
 }
 
 void
