@@ -25,13 +25,7 @@
 // Create a SingleSerial driver that looks just like the stock Arduino
 // driver.
 //
-SingleSerialPort0(Serial);
-
-//
-// To create a driver for a different serial port, on a board that
-// supports more than one, use the appropriate macro:
-//
-//SingleSerialPort2(Serial2);
+SingleSerialPort(Serial);
 
 
 void setup(void)
@@ -64,8 +58,10 @@ loop(void)
     //
     // Perform a simple loopback operation.
     //
-    c = Serial.read();
-    if (-1 != c)
+    
+    if(Serial.available()) {
+	c = Serial.read();
         Serial.write(c);
+    }
 }
 
