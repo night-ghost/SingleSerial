@@ -19,8 +19,8 @@
   parsing functions based on TextFinder library by Michael Margolis
 */
 
-#ifndef Stream_h
-#define Stream_h
+#ifndef myStream_h
+#define myStream_h
 
 #include <inttypes.h>
 #include "Print.h"
@@ -52,7 +52,7 @@ class MyStream : public Print
 
     MyStream() { /*_timeout=1000; */ }
 
-    size_t _write(uint8_t c){ write(c); }
+    size_t _write(uint8_t c){ return write(c); }
     
 // parsing methods
 

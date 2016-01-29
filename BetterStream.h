@@ -18,7 +18,6 @@
 
 #include "MyStream.h"
 #include <avr/pgmspace.h>
-//#include "../AP_Common/AP_Common.h" no other libs!  
 
 // prog_char_t is used as a wrapper type for prog_char, which is
 // a character stored in flash. By using this wrapper type we can
