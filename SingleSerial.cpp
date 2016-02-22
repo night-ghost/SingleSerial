@@ -1,6 +1,10 @@
 // -*-  tab-width: 4; Mode: C++; c-basic-offset: 4; indent-tabs-mode: t -*-
 //
-// Interrupt-driven serial transmit/receive library.
+// Simple and fast Interrupt-driven serial transmit/receive library for chips with single hardware serial port
+//
+//	Copyright (c) 2015 NightGhost night_ghost@ykoctpa.ru  All rights reserved..
+//
+// based on FastSerial by Michael Smith and Arduino's HardwareSerial
 //
 //      Copyright (c) 2010 Michael Smith. All rights reserved.
 //
@@ -71,7 +75,7 @@ void SingleSerial::begin(long baud)
 
 	// If the user has supplied a new baud rate, compute the new UBRR value.
 	if (baud > 0) {
-/*
+//*
 #if F_CPU == 16000000UL
 		// hardcoded exception for compatibility with the bootloader shipped
 		// with the Duemilanove and previous boards and the firmware on the 8U2
@@ -79,7 +83,7 @@ void SingleSerial::begin(long baud)
 		if (baud == 57600)
 			use_u2x = false;
 #endif
-*/
+//*/
 		if (use_u2x) {
 			UCSR0A = 1 << U2X0;
 			ubrr = (F_CPU / 4 / baud - 1) / 2;
@@ -127,7 +131,7 @@ uint8_t SingleSerial::read(void)
 	c = _rxBytes[_rxBuffer.tail];
 	_rxBuffer.tail = (_rxBuffer.tail + 1) & (SERIAL_RX_BUFFER_SIZE-1);
 
-	return (c);
+	return c;
 }
 
 uint8_t SingleSerial::peek(void)
@@ -194,7 +198,6 @@ void SingleSerial::write(uint8_t c)
 
 	i = (_txBuffer.head + 1) & (SERIAL_TX_BUFFER_SIZE-1);
 	while (i == _txBuffer.tail) 	// wait for room in the tx buffer
-
 		;
 
 	// add byte to the buffer

@@ -70,8 +70,7 @@
 
 /// @file	SingleSerial.h
 /// @brief	An enhanced version of the Arduino HardwareSerial class
-///			implementing interrupt-driven transmission and flexible
-///			buffer management.
+///			implementing interrupt-driven transmission 
 ///
 /// Because Arduino libraries aren't really libraries, but we want to
 /// only define interrupt handlers for serial ports that are actually
@@ -172,7 +171,6 @@ struct hack
       SingleSerialHandler(USART0_RX_vect, USART0_UDRE_vect, UDR0, UCSR0B, _BV(UDRIE0)); \
       SingleSerial _name
 
-#define SingleSerialPort_x(_name)   SingleSerialHandler(USART0_RX_vect, USART0_UDRE_vect, UDR0, UCSR0B, _BV(UDRIE0))
 
 //
 // Portability; convert various older sets of defines for U(S)ART0 up
