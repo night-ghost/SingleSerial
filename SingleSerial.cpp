@@ -164,6 +164,10 @@ void SingleSerial::flush(void)
 	_txBuffer.tail = _txBuffer.head;
 }
 
+void SingleSerial::wait(void){
+    while (SingleSerial::_txBuffer.tail != SingleSerial::_txBuffer.head);
+}
+
 #if defined(ARDUINO) && ARDUINO >= 100
 size_t SingleSerial::write(uint8_t c)
 {

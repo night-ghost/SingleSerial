@@ -14,7 +14,7 @@
 #define HardwareSerial_h
 
 
-#define SKIP_FLOAT // printf without float
+//#define SKIP_FLOAT // printf without float
 
 #include "MyStream.h"
 #include <avr/pgmspace.h>

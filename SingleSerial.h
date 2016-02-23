@@ -99,6 +99,7 @@ public:
 	virtual uint8_t read(void);
 	virtual uint8_t peek(void);
 	virtual void flush(void);
+	void wait();
 #if defined(ARDUINO) && ARDUINO >= 100
 	virtual size_t write(uint8_t c);
 #else
