@@ -62,7 +62,7 @@
 #include "BetterStream.h"
 
 #if !defined(SERIAL_TX_BUFFER_SIZE)
-#define SERIAL_TX_BUFFER_SIZE 16
+#define SERIAL_TX_BUFFER_SIZE 4
 #endif
 #if !defined(SERIAL_RX_BUFFER_SIZE)
 #define SERIAL_RX_BUFFER_SIZE 128
@@ -92,14 +92,16 @@ public:
 
 	/// @name 	Serial API
     //@{
-	void begin(long baud);
-	void end(void);
+	static void begin(long baud);
+	static void end(void);
+	static  uint8_t read_S(void);
+	static uint8_t available_S(void);
 	virtual uint8_t available(void);
 //	virtual uint8_t txspace(void);
 	virtual uint8_t read(void);
 	virtual uint8_t peek(void);
 	virtual void flush(void);
-	void wait();
+	static void wait();
 #if defined(ARDUINO) && ARDUINO >= 100
 	virtual size_t write(uint8_t c);
 #else

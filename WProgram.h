@@ -4,7 +4,7 @@
 #define HardwareSerial_h
 #include "wiring.h"
 #include <stdarg.h>
-#include "HardwareSerial.h"
+//#include "HardwareSerial.h"
 
 #ifdef __cplusplus
 extern "C" {

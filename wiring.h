@@ -100,14 +100,14 @@ typedef unsigned int word;
 
 #define bit(b) (1UL << (b))
 
-typedef uint8_t boolean;
+//typedef uint8_t boolean;
 typedef uint8_t byte;
 
 void init(void);
 
 void pinMode(uint8_t, uint8_t);
 void digitalWrite(uint8_t, uint8_t);
-int digitalRead(uint8_t);
+uint8_t digitalRead(uint8_t);
 void analogReference(uint8_t mode);
 void analogWrite(uint8_t, int);
 
@@ -120,7 +120,7 @@ unsigned long pulseIn(uint8_t pin, uint8_t state, unsigned long timeout);
 void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t val);
 uint8_t shiftIn(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder);
 
-void attachInterrupt(uint8_t, void (*)(void), int mode);
+void attachInterrupt(uint8_t, void (*)(void), uint8_t mode);
 void detachInterrupt(uint8_t);
 
 int abs(int v);
@@ -129,8 +129,8 @@ int abs(int v);
 } // extern "C"
 #endif
 
-void setup(void);
-void loop(void);
+//void setup(void);
+//void loop(void);
 long map(long , long , long , long , long );
 
 #endif

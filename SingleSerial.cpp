@@ -105,12 +105,18 @@ void SingleSerial::end()
 
 }
 
-uint8_t SingleSerial::available(void)
+uint8_t SingleSerial::available_S(void)
 {
 	if (!IS_OPEN)
 		return 0;
 	return ((_rxBuffer.head - _rxBuffer.tail) & (SERIAL_RX_BUFFER_SIZE -1) );
 }
+
+uint8_t SingleSerial::available(void)
+{
+	return available_S();
+}
+
 /*
 uint8_t SingleSerial::txspace(void)
 {
@@ -119,7 +125,7 @@ uint8_t SingleSerial::txspace(void)
 	return ((SERIAL_TX_BUFFER_SIZE) - ((_txBuffer.head - _txBuffer.tail) & SERIAL_TX_BUFFER_SIZE));
 }
 */
-uint8_t SingleSerial::read(void)
+uint8_t SingleSerial::read_S(void)
 {
 	uint8_t c;
 
@@ -132,6 +138,11 @@ uint8_t SingleSerial::read(void)
 	_rxBuffer.tail = (_rxBuffer.tail + 1) & (SERIAL_RX_BUFFER_SIZE-1);
 
 	return c;
+}
+
+uint8_t SingleSerial::read(void)
+{
+    return read_S();
 }
 
 uint8_t SingleSerial::peek(void)
