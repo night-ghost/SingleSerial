@@ -96,6 +96,7 @@ public:
 	static void end(void);
 	static  uint8_t read_S(void);
 	static uint8_t available_S(void);
+	static size_t write_S(uint8_t c);
 	virtual uint8_t available(void);
 //	virtual uint8_t txspace(void);
 	virtual uint8_t read(void);

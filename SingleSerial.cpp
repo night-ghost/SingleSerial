@@ -180,7 +180,8 @@ void SingleSerial::wait(void){
 }
 
 #if defined(ARDUINO) && ARDUINO >= 100
-size_t SingleSerial::write(uint8_t c)
+
+size_t SingleSerial::write_S(uint8_t c)
 {
 	uint8_t i;
 
@@ -203,6 +204,11 @@ size_t SingleSerial::write(uint8_t c)
 	// return number of bytes written (always 1)
 	return 1;
 }
+size_t SingleSerial::write(uint8_t c) {
+    return write_S(c);
+}
+
+
 #else
 void SingleSerial::write(uint8_t c)
 {
