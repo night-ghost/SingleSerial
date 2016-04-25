@@ -48,6 +48,10 @@ SingleSerial::Buffer SingleSerial::_txBuffer;
 uint8_t SingleSerial::_rxBytes[SERIAL_RX_BUFFER_SIZE];
 uint8_t SingleSerial::_txBytes[SERIAL_TX_BUFFER_SIZE];
 
+#ifdef DEBUG
+extern volatile uint16_t lost_bytes;
+#endif
+
 #define IS_OPEN (UCSR0B & _BV(RXEN0) )
 
 // Constructor /////////////////////////////////////////////////////////////////
@@ -96,12 +100,15 @@ void SingleSerial::begin(long baud)
 		UBRR0L = ubrr;
 	}
 
-	UCSR0B |= (_BV(RXEN0) |  _BV(TXEN0) | _BV(RXCIE0));
+	//UCSR0B |= (_BV(RXEN0) |  _BV(TXEN0) | _BV(RXCIE0));
+	UCSR0B = _BV(RXEN0) |  _BV(TXEN0) | _BV(RXCIE0);
+	UCSR0C = _BV(UCSZ01) | _BV(UCSZ00); // 8 bit
 }
 
 void SingleSerial::end()
 {
-	UCSR0B &= ~((_BV(RXEN0) |  _BV(TXEN0) | _BV(RXCIE0)) | _BV(UDRIE0));
+	//UCSR0B &= ~((_BV(RXEN0) |  _BV(TXEN0) | _BV(RXCIE0)) | _BV(UDRIE0));
+	UCSR0B = 0;
 
 }
 
@@ -173,6 +180,11 @@ void SingleSerial::flush(void)
 	// occurs after reading the value of _txBuffer->tail but before writing
 	// the value to _txBuffer->head.
 	_txBuffer.tail = _txBuffer.head;
+
+#ifdef DEBUG
+    lost_bytes=0;
+#endif
+
 }
 
 void SingleSerial::wait(void){

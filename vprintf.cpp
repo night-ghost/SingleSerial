@@ -100,7 +100,7 @@ BetterStream::_vprintf (unsigned char in_progmem, const char *fmt, va_list ap)
         }
         vasprintf(&str, fmt2, ap);
         for (i=0; str[i]; i++) {
-                write(str[i]);
+                _write(str[i]);
         }
         free(str);
         free(fmt2);
@@ -129,8 +129,8 @@ BetterStream::_vprintf (unsigned char in_progmem, const char *fmt, va_list ap)
                         }
                         /* emit cr before lf to make most terminals happy */
                         if (c == '\n')
-                                write('\r');
-                        write(c);
+                                _write('\r');
+                        _write(c);
                 }
 
                 flags = 0;
@@ -245,21 +245,21 @@ BetterStream::_vprintf (unsigned char in_progmem, const char *fmt, va_list ap)
                                         width -= ndigs;
                                         if (!(flags & FL_LPAD)) {
                                                 do {
-                                                        write(' ');
+                                                        _write(' ');
                                                 } while (--width);
                                         }
                                 } else {
                                         width = 0;
                                 }
                                 if (sign)
-                                        write(sign);
+                                        _write(sign);
                                 p = PSTR("inf");
                                 if (vtype & FTOA_NAN)
                                         p = PSTR("nan");
                                 while ( (ndigs = pgm_read_byte((const prog_char *)p)) != 0) {
                                         if (flags & FL_FLTUPP)
                                                 ndigs += 'I' - 'i';
-                                        write(ndigs);
+                                        _write(ndigs);
                                         p++;
                                 }
                                 goto tail;
@@ -298,14 +298,14 @@ BetterStream::_vprintf (unsigned char in_progmem, const char *fmt, va_list ap)
                         /* Output before first digit    */
                         if (!(flags & (FL_LPAD | FL_ZFILL))) {
                                 while (width) {
-                                        write(' ');
+                                        _write(' ');
                                         width--;
                                 }
                         }
-                        if (sign) write(sign);
+                        if (sign) _write(sign);
                         if (!(flags & FL_LPAD)) {
                                 while (width) {
-                                        write('0');
+                                        _write('0');
                                         width--;
                                 }
                         }
@@ -315,12 +315,12 @@ BetterStream::_vprintf (unsigned char in_progmem, const char *fmt, va_list ap)
                                 n = exp > 0 ? exp : 0;          /* exponent of left digit */
                                 do {
                                         if (n == -1)
-                                                write('.');
+                                                _write('.');
                                         flags = (n <= exp && n > exp - ndigs)
                                                 ? buf[exp - n + 1] : '0';
                                         if (--n < -prec)
                                                 break;
-                                        write(flags);
+                                        _write(flags);
                                 } while (1);
                                 if (n == exp
                                     && (buf[1] > '5'
@@ -328,34 +328,34 @@ BetterStream::_vprintf (unsigned char in_progmem, const char *fmt, va_list ap)
                                         {
                                                 flags = '1';
                                         }
-                                write(flags);
+                                _write(flags);
         
                         } else {                                /* 'e(E)' format        */
 
                                 /* mantissa     */
                                 if (buf[1] != '1')
                                         vtype &= ~FTOA_CARRY;
-                                write(buf[1]);
+                                _write(buf[1]);
                                 if (prec) {
-                                        write('.');
+                                        _write('.');
                                         sign = 2;
                                         do {
-                                                write(buf[sign++]);
+                                                _write(buf[sign++]);
                                         } while (--prec);
                                 }
 
                                 /* exponent     */
-                                write(flags & FL_FLTUPP ? 'E' : 'e');
+                                _write(flags & FL_FLTUPP ? 'E' : 'e');
                                 ndigs = '+';
                                 if (exp < 0 || (exp == 0 && (vtype & FTOA_CARRY) != 0)) {
                                         exp = -exp;
                                         ndigs = '-';
                                 }
-                                write(ndigs);
+                                _write(ndigs);
                                 for (ndigs = '0'; exp >= 10; exp -= 10)
                                         ndigs += 1;
-                                write(ndigs);
-                                write('0' + exp);
+                                _write(ndigs);
+                                _write('0' + exp);
                         }
 
                         goto tail;
@@ -392,12 +392,12 @@ BetterStream::_vprintf (unsigned char in_progmem, const char *fmt, va_list ap)
                         str_lpad:
                                 if (!(flags & FL_LPAD)) {
                                         while (size < width) {
-                                                write(' ');
+                                                _write(' ');
                                                 width--;
                                         }
                                 }
                                 while (size) {
-                                        write(GETBYTE (flags, FL_PGMSTRING, pnt));
+                                        _write(GETBYTE (flags, FL_PGMSTRING, pnt));
                                         if (width) width -= 1;
                                         size -= 1;
                                 }
@@ -493,7 +493,7 @@ BetterStream::_vprintf (unsigned char in_progmem, const char *fmt, va_list ap)
                                         }
                                 }
                                 while (len < width) {
-                                        write(' ');
+                                        _write(' ');
                                         len++;
                                 }
                         }
@@ -501,30 +501,30 @@ BetterStream::_vprintf (unsigned char in_progmem, const char *fmt, va_list ap)
                         width =  (len < width) ? width - len : 0;
 
                         if (flags & FL_ALT) {
-                                write('0');
+                                _write('0');
                                 if (flags & FL_ALTHEX)
-                                        write(flags & FL_ALTUPP ? 'X' : 'x');
+                                        _write(flags & FL_ALTUPP ? 'X' : 'x');
                         } else if (flags & (FL_NEGATIVE | FL_PLUS | FL_SPACE)) {
                                 unsigned char z = ' ';
                                 if (flags & FL_PLUS) z = '+';
                                 if (flags & FL_NEGATIVE) z = '-';
-                                write(z);
+                                _write(z);
                         }
                 
                         while (prec > c) {
-                                write('0');
+                                _write('0');
                                 prec--;
                         }
         
                         do {
-                                write(buf[--c]);
+                                _write(buf[--c]);
                         } while (c);
                 }
         
         tail:
                 /* Tail is possible.    */
                 while (width) {
-                        write(' ');
+                        _write(' ');
                         width--;
                 }
         } /* for (;;) */
