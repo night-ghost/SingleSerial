@@ -63,7 +63,7 @@ SingleSerial::SingleSerial()
 
 // Public Methods //////////////////////////////////////////////////////////////
 
-void SingleSerial::begin(long baud)
+void SingleSerial::begin(unsigned long baud)
 {
 	uint16_t ubrr;
 	bool use_u2x = true;
@@ -105,15 +105,20 @@ void SingleSerial::begin(long baud)
 	UCSR0C = _BV(UCSZ01) | _BV(UCSZ00); // 8 bit
 }
 
-void SingleSerial::end()
+void SingleSerial::begin(unsigned long baud, uint8_t mode)
 {
+    begin(baud);
+    UCSR0C = mode;
+}
+
+
+void SingleSerial::end(){
 	//UCSR0B &= ~((_BV(RXEN0) |  _BV(TXEN0) | _BV(RXCIE0)) | _BV(UDRIE0));
 	UCSR0B = 0;
 
 }
 
-uint8_t SingleSerial::available_S(void)
-{
+uint8_t SingleSerial::available_S(void){
 	if (!IS_OPEN)
 		return 0;
 	return ((_rxBuffer.head - _rxBuffer.tail) & (SERIAL_RX_BUFFER_SIZE -1) );
@@ -147,24 +152,21 @@ uint8_t SingleSerial::read_S(void)
 	return c;
 }
 
-uint8_t SingleSerial::read(void)
-{
+uint8_t SingleSerial::read(void){
     return read_S();
 }
 
-uint8_t SingleSerial::peek(void)
-{
+uint8_t SingleSerial::peek(void){
 
 	// if the head and tail are equal, the buffer is empty
 	if (!IS_OPEN || (_rxBuffer.head == _rxBuffer.tail))
 		return 0;
 
 	// pull character from tail
-	return (_rxBytes[_rxBuffer.tail]);
+	return _rxBytes[_rxBuffer.tail];
 }
 
-void SingleSerial::flush(void)
-{
+void SingleSerial::flush(void){
 	// don't reverse this or there may be problems if the RX interrupt
 	// occurs after reading the value of _rxBuffer->head but before writing
 	// the value to _rxBuffer->tail; the previous value of head
@@ -193,12 +195,12 @@ void SingleSerial::wait(void){
 
 #if defined(ARDUINO) && ARDUINO >= 100
 
-size_t SingleSerial::write_S(uint8_t c)
+void SingleSerial::write_S(uint8_t c)
 {
 	uint8_t i;
 
 	if (!IS_OPEN) // drop bytes if not open
-		return 0;
+		return;
 
 	
 	i = (_txBuffer.head + 1) & (SERIAL_TX_BUFFER_SIZE-1);
@@ -212,12 +214,13 @@ size_t SingleSerial::write_S(uint8_t c)
 
 	// enable the data-ready interrupt, as it may be off if the buffer is empty
 	UCSR0B |= _BV(UDRIE0);
-
-	// return number of bytes written (always 1)
-	return 1;
 }
+
 size_t SingleSerial::write(uint8_t c) {
-    return write_S(c);
+    write_S(c);
+    // return number of bytes written (always 1)
+    return 1;
+
 }
 
 

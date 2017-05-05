@@ -54,10 +54,13 @@
 #endif
 #define HardwareSerial_h
 
+
+//#define DEBUG 1
+
 #include <inttypes.h>
 #include <stdlib.h>
-#include <avr/io.h>
-#include <avr/interrupt.h>
+//#include <avr/io.h>
+//#include <avr/interrupt.h>
 
 #include "BetterStream.h"
 
@@ -65,7 +68,7 @@
 #define SERIAL_TX_BUFFER_SIZE 4
 #endif
 #if !defined(SERIAL_RX_BUFFER_SIZE)
-#define SERIAL_RX_BUFFER_SIZE 128
+#define SERIAL_RX_BUFFER_SIZE 128 // 64 loses packets in 115200
 #endif
 
 /// @file	SingleSerial.h
@@ -84,6 +87,34 @@
 ///	@name	Compatibility
 ///
 
+
+// Define config for Serial.begin(baud, config);
+#define SERIAL_5N1 0x00
+#define SERIAL_6N1 0x02
+#define SERIAL_7N1 0x04
+#define SERIAL_8N1 0x06
+#define SERIAL_5N2 0x08
+#define SERIAL_6N2 0x0A
+#define SERIAL_7N2 0x0C
+#define SERIAL_8N2 0x0E
+#define SERIAL_5E1 0x20
+#define SERIAL_6E1 0x22
+#define SERIAL_7E1 0x24
+#define SERIAL_8E1 0x26
+#define SERIAL_5E2 0x28
+#define SERIAL_6E2 0x2A
+#define SERIAL_7E2 0x2C
+#define SERIAL_8E2 0x2E
+#define SERIAL_5O1 0x30
+#define SERIAL_6O1 0x32
+#define SERIAL_7O1 0x34
+#define SERIAL_8O1 0x36
+#define SERIAL_5O2 0x38
+#define SERIAL_6O2 0x3A
+#define SERIAL_7O2 0x3C
+#define SERIAL_8O2 0x3E
+
+
 class SingleSerial: public BetterStream {
 public:
 
@@ -92,11 +123,13 @@ public:
 
 	/// @name 	Serial API
     //@{
-	static void begin(long baud);
+	static void begin(unsigned long baud);
+	static void begin(unsigned long baud, uint8_t mode);
+	
 	static void end(void);
 	static  uint8_t read_S(void);
 	static uint8_t available_S(void);
-	static size_t write_S(uint8_t c);
+	static void write_S(uint8_t c);
 	virtual uint8_t available(void);
 //	virtual uint8_t txspace(void);
 	virtual uint8_t read(void);
@@ -150,6 +183,7 @@ ISR(_RXVECTOR, ISR_BLOCK)                                               \
             SingleSerial::_rxBuffer.head = i;                     \
         } /* buffer overflow */                                   \
 /*        else    digitalWrite(LEDPIN, !digitalRead(LEDPIN));  */ \
+/*         else { extern volatile uint16_t lost_bytes; lost_bytes++; }*/ \
 }                                                                       \
 ISR(_TXVECTOR, ISR_BLOCK)                                               \
 {                                                                       \
