@@ -367,6 +367,7 @@ BetterStream::_vprintf (unsigned char in_progmem, const char *fmt, va_list ap)
                 {
                         const char * pnt;
                         size_t size;
+                        static const  PROGMEM char null[] = "<NULL>";
 
                         switch (c) {
 
@@ -378,6 +379,10 @@ BetterStream::_vprintf (unsigned char in_progmem, const char *fmt, va_list ap)
 
                         case 's':
                                 pnt = va_arg (ap, char *);
+                                if(pnt == NULL) { 
+                                    pnt = null;
+                                    goto as_S;
+                                }
                                 size = strnlen (pnt, (flags & FL_PREC) ? prec : ~0);
                         no_pgmstring:
                                 flags &= ~FL_PGMSTRING;
@@ -386,6 +391,10 @@ BetterStream::_vprintf (unsigned char in_progmem, const char *fmt, va_list ap)
                         case 'S':
                         // pgmstring: // not yet used
                                 pnt = va_arg (ap, char *);
+                                if(pnt == NULL) { 
+                                    pnt = null;
+                                }
+                        as_S:
                                 size = strnlen_P (pnt, (flags & FL_PREC) ? prec : ~0);
                                 flags |= FL_PGMSTRING;
 
